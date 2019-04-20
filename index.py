@@ -1,4 +1,8 @@
 from flask import Flask
-from app import controller
+from app.controller import Controller
 
+app = Flask(__name__)
 
+@app.route("/", methods=['POST'])
+def run():
+    return Controller.run()
