@@ -10,6 +10,7 @@ class Controller:
     qismeResponse = ""
     http = urllib3.PoolManager()
 
+    #ambil dan tampung response data dari webhook
     def getResponse():
         if request.method == "POST":
             Controller.qismeResponse = request.json
@@ -59,7 +60,7 @@ class Controller:
                 }
             ]
         }
-        encoded_data = simplejson.dumps(payload).encode('utf-8')
+        encoded_data = simplejson.dumps(payload).encode("utf-8")
         replay = { 
             "access_token" : Controller.access_token,
             "topic_id" : room_id,
@@ -70,7 +71,154 @@ class Controller:
         if buttons.status == 200:
             return jsonify({"status":"success"}), buttons.status
         else:
-            return jsonify({"status":"error"}), buttons.status    
+            return jsonify({"status":"error"}), buttons.status  
+
+    #contoh penggunaan api post-comment untuk jenis location
+    def replyCommandLocation(room_id):
+        payload = {
+            "name" : "Telkom Landmark Tower",
+            "address" : "Jalan Jenderal Gatot Subroto No.Kav. 52, West Kuningan, Mampang Prapatan, South Jakarta City, Jakarta 12710",
+            "latitude" : "-6.2303817",
+            "longitude" : "106.8159363",
+            "map_url" : "https://www.google.com/maps/@-6.2303817,106.8159363,17z"
+        }
+        encoded_data = simplejson.dumps(payload).encode("utf-8")
+        replay = {
+            "access_token" : Controller.access_token,
+            "topic_id" : room_id,
+            "type" : "location",
+            "payload" : encoded_data
+        }
+        location  = Controller.http.request("POST", Controller.apiurl, fields=replay)
+        if location.status == 200:
+            return jsonify({"status":"success"}), location.status
+        else:
+            return jsonify({"status":"error"}), location.status 
+    
+    #contoh penggunaan api post-comment untuk jenis carousel
+    def replyCommandCarousel(room_id):
+        payload = {
+            "cards" : [
+                {
+                    "image" : "https://cdns.img.com/a.jpg",
+                    "title" : "Gambar 1",
+                    "description" : "Carousel Double Button",
+                    "default_action" : {
+                        "type" : "postback",
+                        "postback_text" : "Load More...",
+                        "payload" : {
+                            "url" : "https://j.id",
+                            "method" : "GET",
+                            "payload": None
+                        }
+                    },
+                    "buttons" : [
+                        {
+                            "label" : "Button 1",
+                            "type" : "postback",
+                            "postback_text" : "Load More...",
+                            "payload" : {
+                                "url" : "https://www.r.com",
+                                "method" : "GET",
+                                "payload" : None
+                            }
+                        },
+                        {
+                            "label" : "Button 2",
+                            "type" : "postback",
+                            "postback_text" : "Load More...",
+                            "payload" : {
+                                "url" : "https://www.r.com",
+                                "method" : "GET",
+                                "payload" : None
+                            }
+                        }
+                    ]
+                },
+                {
+                    "image" : "https://res.cloudinary.com/hgk8.jpg",
+                    "title" : "Gambar 2",
+                    "description" : "Carousel single button",
+                    "default_action" : {
+                        "type" : "postback",
+                        "postback_text" : "Load More...",
+                        "payload" : {
+                            "url" : "https://j.id",
+                            "method" : "GET",
+                            "payload": None
+                        }
+                    },
+                    "buttons" : [
+                        {
+                            "label" : "Button 1",
+                            "type" : "postback",
+                            "postback_text" : "Load More...",
+                            "payload" : {
+                                "url" : "https://www.r.com",
+                                "method" : "GET",
+                                "payload" : None
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        encoded_data = simplejson.dumps(payload).encode("utf-8")
+        replay = {
+            "access_token" : Controller.access_token,
+            "topic_id" : room_id,
+            "type" : "carousel",
+            "payload" : encoded_data
+        }
+        carousel = Controller.http.request("POST", Controller.apiurl, fields=replay)
+        if carousel.status == 200:
+            return jsonify({"status":"success"}), carousel.status
+        else:
+            return jsonify({"status":"error"}), carousel.status 
+
+    #contoh penggunaan api post-comment untuk jenis card
+    def replyCommandCard(room_id):
+        payload = {
+            "text" : "Special deal buat sista nih..",
+            "image" : "https://cdns.img.com/a.jpg",
+            "title" : "Gambar 1",
+            "description" : "Card Double Button",
+            "url" : "http://url.com/baju?id=123%26track_from_chat_room=123",
+            "buttons" : [
+                {
+                    "label" : "Button 1",
+                    "type" : "postback",
+                    "postback_text" : "Load More...",
+                    "payload" : {
+                        "url" : "https://www.r.com",
+                        "method" : "GET",
+                        "payload" : None
+                    }
+                },
+                {
+                    "label" : "Button 2",
+                    "type" : "postback",
+                    "postback_text" : "Load More...",
+                    "payload" : {
+                        "url" : "https://www.r.com",
+                        "method" : "GET",
+                        "payload" : None
+                    }
+                }
+            ]
+        }
+        encoded_data = simplejson.dumps(payload).encode("utf-8")
+        replay = {
+            "access_token" : Controller.access_token,
+            "topic_id" : room_id,
+            "type" : "card",
+            "payload" : encoded_data
+        }
+        card  = Controller.http.request("POST", Controller.apiurl, fields=replay)
+        if card.status == 200:
+            return jsonify({"status":"success"}), card.status
+        else:
+            return jsonify({"status":"error"}), card.status        
 
     def run():
         Controller.getResponse() 
@@ -80,11 +228,21 @@ class Controller:
             Controller.qismeResponse["message"]["type"],
             Controller.qismeResponse["from"]["fullname"]
         ) 
-        # if not (data.message is None):
-        #     if data.message[0] == "/":
-        #         command = data.message.split("/")
-        #         if not (command[1] is None):
-
-        return Controller.replyCommandButton(data.sender, data.room_id)
-        #return Controller.replyCommandText(data.sender, data.message_type, data.room_id)
-        # return jsonify({"status":"success"}), 200          
+        if not (data.message is None):
+            if data.message[0] == "/":
+                command = data.message.split("/")
+                if not (command[1] is None):
+                    switcher = {
+                        "location" : Controller.replyCommandLocation(data.room_id),
+                        "carousel" : Controller.replyCommandCarousel(data.room_id),
+                        "button" : Controller.replyCommandButton(data.sender, data.room_id),
+                        "card" : Controller.replyCommandCard(data.room_id)
+                    }
+                    return switcher.get(command[1], Controller.replyCommandText(data.sender, data.message_type, data.room_id))
+                else:
+                    return Controller.replyCommandText(data.sender, data.message_type, data.room_id)
+            else:
+                return Controller.replyCommandText(data.sender, data.message_type, data.room_id)        
+        
+        
+                
