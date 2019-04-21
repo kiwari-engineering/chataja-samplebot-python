@@ -1,13 +1,13 @@
-# import unirest
-from app.model import Model
 import simplejson
+from vendor.unirest import unirest
+from app.model import Model
 from flask import request, jsonify, abort
 from array import *
 
 class Controller:
-    access_token = ""
-    apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/"
-    headers = {"Content-Type" : "application/json"} 
+    access_token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0Njk1NSwidGltZXN0YW1wIjoiMjAxOS0wNC0wNSAwNjoxMjo0MSArMDAwMCJ9.u5PHjfNPrRL_nhh5S-UUSNLBr2kKBlBI89px2L2jjdg"
+    apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/post_comment"
+    headers = { "Content-Type" : "application/json" } 
     qismeResponse = ""
 
     def getResponse():
@@ -19,6 +19,24 @@ class Controller:
         else:
             abort(400)
 
+    #contoh penggunaan api post-comment untuk jenis text
+    def replyCommandText(display_name, message_type, room_id):
+        comment = "Maaf {}, command yang kamu ketik salah. Jenis pesan kamu adalah {}. Silahkan coba command berikut : /location, /button, /card, /carousel".format(display_name,message_type)
+
+        replay = { 
+            "access_token" : Controller.access_token,
+            "topic_id" : room_id,
+            "type" : "text",
+            "comment" : comment 
+        }
+        post_comment = unirest.post(Controller.apiurl, headers=Controller.headers, params=replay)
+        post_comment.body 
+        print(Controller.apiurl)  
+        print(Controller.headers)
+        print(replay)
+        print(post_comment.body)  
+        return jsonify({"status":"success"}), 200
+
     def run():
         Controller.getResponse() 
         data = Model(
@@ -27,5 +45,5 @@ class Controller:
             Controller.qismeResponse["message"]["type"],
             Controller.qismeResponse["from"]["fullname"]
         ) 
-        print(data.room_id)
-        return jsonify({"status":"success"}), 200          
+        return Controller.replyCommandText(data.sender, data.message_type, data.room_id)
+        # return jsonify({"status":"success"}), 200          
