@@ -1,5 +1,5 @@
 import simplejson
-from vendor.unirest import unirest
+import urllib3
 from app.model import Model
 from flask import request, jsonify, abort
 from array import *
@@ -7,8 +7,9 @@ from array import *
 class Controller:
     access_token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0Njk1NSwidGltZXN0YW1wIjoiMjAxOS0wNC0wNSAwNjoxMjo0MSArMDAwMCJ9.u5PHjfNPrRL_nhh5S-UUSNLBr2kKBlBI89px2L2jjdg"
     apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/post_comment"
-    headers = { "Content-Type" : "application/json" } 
+    headers = {"Accept" : "application/json"} 
     qismeResponse = ""
+    http = urllib3.PoolManager()
 
     def getResponse():
         if request.method == "POST":
@@ -29,13 +30,11 @@ class Controller:
             "type" : "text",
             "comment" : comment 
         }
-        post_comment = unirest.post(Controller.apiurl, headers=Controller.headers, params=replay)
-        post_comment.body 
-        print(Controller.apiurl)  
-        print(Controller.headers)
-        print(replay)
-        print(post_comment.body)  
-        return jsonify({"status":"success"}), 200
+        text = Controller.http.request("POST", Controller.apiurl, headers=Controller.headers, fields=replay)
+        if text.status == 200:
+            return jsonify({"status":"success"}), text.status
+        else:
+            return jsonify({"status":"error"}), text.status   
 
     def run():
         Controller.getResponse() 

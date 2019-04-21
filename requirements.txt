@@ -1,3 +1,4 @@
 flask
 simplejson
 future
+urllib3
