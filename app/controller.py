@@ -1,5 +1,5 @@
 # import unirest
-# import model
+from app.model import Model
 import simplejson
 from flask import request, jsonify, abort
 from array import *
@@ -12,14 +12,20 @@ class Controller:
 
     def getResponse():
         if request.method == "POST":
-            qismeResponse = request.json
+            Controller.qismeResponse = request.json
             log = open("log-comment.txt", "w")
-            log.write(simplejson.dumps(qismeResponse, indent=4, sort_keys=True))
+            log.write(simplejson.dumps(Controller.qismeResponse, indent=4, sort_keys=True))
             log.close()
-            return jsonify({"status":"success"}), 200
         else:
             abort(400)
 
     def run():
-        return Controller.getResponse()  
-              
+        Controller.getResponse() 
+        data = Model(
+            Controller.qismeResponse["chat_room"]["qiscus_room_id"],
+            Controller.qismeResponse["message"]["text"],
+            Controller.qismeResponse["message"]["type"],
+            Controller.qismeResponse["from"]["fullname"]
+        ) 
+        print(data.room_id)
+        return jsonify({"status":"success"}), 200          
