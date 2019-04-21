@@ -1,19 +1,22 @@
-import simplejson
-import urllib3
-from app.model import Model
+import simplejson #panggil librari json
+import urllib3 #panggil librari http request
+from app.model import Model #panggil model
 from flask import request, jsonify, abort
 from array import *
 
 class Controller:
+    #set atribut yang dibutuhkan untuk controller
     access_token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0Njk1NSwidGltZXN0YW1wIjoiMjAxOS0wNC0wNSAwNjoxMjo0MSArMDAwMCJ9.u5PHjfNPrRL_nhh5S-UUSNLBr2kKBlBI89px2L2jjdg"
     apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/post_comment"
-    qismeResponse = ""
-    http = urllib3.PoolManager()
+    qismeResponse = "" #atribut untuk nampung response
+    http = urllib3.PoolManager() #inisiasi atribut http request library urllib3
 
     #ambil dan tampung response data dari webhook
     def getResponse():
         if request.method == "POST":
             Controller.qismeResponse = request.json
+
+            #siapkan log untuk memastikan data terambil
             log = open("log-comment.txt", "w")
             log.write(simplejson.dumps(Controller.qismeResponse, indent=4, sort_keys=True))
             log.close()
@@ -220,18 +223,26 @@ class Controller:
         else:
             return jsonify({"status":"error"}), card.status        
 
+    #fungsi untuk jalankan bot
     def run():
-        Controller.getResponse() 
+        Controller.getResponse() #ambil response
+
+        #tampung hasil response ke model
         data = Model(
             Controller.qismeResponse["chat_room"]["qiscus_room_id"],
             Controller.qismeResponse["message"]["text"],
             Controller.qismeResponse["message"]["type"],
             Controller.qismeResponse["from"]["fullname"]
         ) 
+
+        #cek jika pesan tidak kosong
         if not (data.message is None):
+            #cari chat yang mengandung '/' untuk menjalankan command bot
             if data.message[0] == "/":
+                #ambil nilai text setelah karakter '/'
                 command = data.message.split("/")
                 if not (command[1] is None):
+                    #arahkan command ke fungsi yang dituju
                     switcher = {
                         "location" : Controller.replyCommandLocation(data.room_id),
                         "carousel" : Controller.replyCommandCarousel(data.room_id),
