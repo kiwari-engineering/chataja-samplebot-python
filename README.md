@@ -5,7 +5,7 @@
 * [Python 3](https://www.python.org/)
 * [Flask](http://flask.pocoo.org/)
 * [Pip 3](https://pypi.org/project/pip/)
-* [ngrok](https://ngrok.com/)
+* [Ngrok](https://ngrok.com/)
 * [Kiwari Access Token](https://qisme.qiscus.com/app/kiwari-prod)
 
 ## How to run
@@ -33,7 +33,7 @@ $ flask run
 * Tunneling your webhook server
 
 ```bash
-$ ngrok http 3000
+$ ngrok http 5000
 ```
 
 * Register your webhook url by copy your ngrok https url from CLI at [Kiwari User Dashboard Profile](https://qisme.qiscus.com/app/kiwari-prod)
