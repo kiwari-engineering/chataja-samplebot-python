@@ -1,3 +1,6 @@
+# @authors: Iskandar Suhaimi
+# @email: hello@iskandarsuhaimi.com
+
 from flask import Flask
 from app.controller import Controller
 
