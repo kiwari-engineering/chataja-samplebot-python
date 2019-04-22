@@ -1,5 +1,5 @@
-import simplejson #panggil librari json
-import urllib3 #panggil librari http request
+import simplejson #panggil library json
+import urllib3 #panggil library http request
 from app.model import Model #panggil model
 from flask import request, jsonify, abort
 from array import *
@@ -40,7 +40,7 @@ class Controller:
             return abort(text.status)   
 
     #contoh penggunaan api post-comment untuk jenis button
-    def replyCommandButton(display_name, room_id):
+    def replyCommandButton(room_id, display_name):
         comment = "Halo {}, ini adalah contoh payload button yang bisa kamu coba".format(display_name)
         payload = {
             "text" : comment,
@@ -235,25 +235,20 @@ class Controller:
             Controller.qismeResponse["from"]["fullname"]
         ) 
 
-        #cek jika pesan tidak kosong
-        if not (data.message is None):
-            #cari chat yang mengandung '/' untuk menjalankan command bot
-            if data.message[0] == "/":
-                #ambil nilai text setelah karakter '/'
-                command = data.message.split("/")
-                if not (command[1] is None):
-                    #arahkan command ke fungsi yang dituju
-                    switcher = {
-                        "location" : Controller.replyCommandLocation(data.room_id),
-                        "carousel" : Controller.replyCommandCarousel(data.room_id),
-                        "button" : Controller.replyCommandButton(data.sender, data.room_id),
-                        "card" : Controller.replyCommandCard(data.room_id)
-                    }
-                    return switcher.get(command[1], Controller.replyCommandText(data.sender, data.message_type, data.room_id))
-                else:
-                    return Controller.replyCommandText(data.sender, data.message_type, data.room_id)
-            else:
-                return Controller.replyCommandText(data.sender, data.message_type, data.room_id)        
+        #cek jika pesan tidak kosong dan mengandung '/'
+        if data.message and data.message[0] == "/":
+            #ambil nilai text setelah karakter '/'
+            command = data.message.split("/")
+            #arahkan command ke fungsi yang dituju
+            switcher = {
+                "location" : [Controller.replyCommandLocation, [data.room_id]],
+                "carousel" : [Controller.replyCommandCarousel, [data.room_id]],
+                "button" : [Controller.replyCommandButton, [data.room_id, data.sender]],
+                "card" : [Controller.replyCommandCard, [data.room_id]]
+            }
+            return switcher[command[1]][0](*switcher[command[1]][1]) if command[1] in switcher else Controller.replyCommandText(data.sender, data.message_type, data.room_id) 
+        else:
+            return Controller.replyCommandText(data.sender, data.message_type, data.room_id)         
         
         
                 
