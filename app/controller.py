@@ -6,7 +6,7 @@ from array import *
 
 class Controller:
     #set atribut yang dibutuhkan untuk controller
-    access_token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0Njk1NSwidGltZXN0YW1wIjoiMjAxOS0wNC0wNSAwNjoxMjo0MSArMDAwMCJ9.u5PHjfNPrRL_nhh5S-UUSNLBr2kKBlBI89px2L2jjdg"
+    access_token = "<input akses token disini>"
     apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/post_comment"
     qismeResponse = "" #atribut untuk nampung response
     http = urllib3.PoolManager() #inisiasi atribut http request library urllib3
