@@ -7,18 +7,18 @@ from array import *
 class Controller:
     #set atribut yang dibutuhkan untuk controller
     access_token = "<input akses token disini>"
-    apiurl = "https://qisme.qiscus.com/api/v1/chat/conversations/post_comment"
-    qismeResponse = "" #atribut untuk nampung response
+    apiurl = "https://api.kiwari.chat/api/v1/chat/conversations/post_comment"
+    apiResponse = "" #atribut untuk nampung response
     http = urllib3.PoolManager() #inisiasi atribut http request library urllib3
 
     #ambil dan tampung response data dari webhook
     def getResponse():
         if request.method == "POST":
-            Controller.qismeResponse = request.json
+            Controller.apiResponse = request.json
 
             #siapkan log untuk memastikan data terambil
             log = open("log-comment.txt", "w")
-            log.write(simplejson.dumps(Controller.qismeResponse, indent=4, sort_keys=True))
+            log.write(simplejson.dumps(Controller.apiResponse, indent=4, sort_keys=True))
             log.close()
         else:
             abort(400)
@@ -46,12 +46,13 @@ class Controller:
             "text" : comment,
             "buttons" : [
                 {
-                    "label" : "Tombol Reply Text",
+                    "label" : "Hitam",
                     "type" : "postback",
+                    "postback_text" : "Putih"
                     "payload" : {
                         "url" : "#",
                         "method" : "get",
-                        "payload" : "null"
+                        "payload" : None
                     }
                 },
                 {
@@ -193,7 +194,7 @@ class Controller:
                     "type" : "postback",
                     "postback_text" : "Load More...",
                     "payload" : {
-                        "url" : "https://www.r.com",
+                        "url" : "#",
                         "method" : "GET",
                         "payload" : None
                     }
@@ -203,7 +204,7 @@ class Controller:
                     "type" : "postback",
                     "postback_text" : "Load More...",
                     "payload" : {
-                        "url" : "https://www.r.com",
+                        "url" : "#",
                         "method" : "GET",
                         "payload" : None
                     }
@@ -229,10 +230,10 @@ class Controller:
 
         #tampung hasil response ke model
         data = Model(
-            Controller.qismeResponse["chat_room"]["qiscus_room_id"],
-            Controller.qismeResponse["message"]["text"],
-            Controller.qismeResponse["message"]["type"],
-            Controller.qismeResponse["from"]["fullname"]
+            Controller.apiResponse["chat_room"]["qiscus_room_id"],
+            Controller.apiResponse["message"]["text"],
+            Controller.apiResponse["message"]["type"],
+            Controller.apiResponse["from"]["fullname"]
         ) 
 
         #cek jika pesan tidak kosong dan mengandung '/'
