@@ -59,7 +59,7 @@ class Controller:
                     "label" : "Tombol Link",
                     "type" : "link",
                     "payload" : {
-                        "url" : "https://www.google.com",
+                        "url" : "https://www.kiwari.chat",
                     }
                 }
             ]
