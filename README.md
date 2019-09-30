@@ -6,7 +6,7 @@
 * [Flask](http://flask.pocoo.org/)
 * [Pip 3](https://pypi.org/project/pip/)
 * [Ngrok](https://ngrok.com/)
-* Kiwari Access Token from `Chatbot Builder` ChatAja app
+* Bot Access Token from `Chatbot Builder` ChatAja app
 
 ## How to run
 
