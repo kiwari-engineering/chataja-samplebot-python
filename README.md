@@ -6,7 +6,7 @@
 * [Flask](http://flask.pocoo.org/)
 * [Pip 3](https://pypi.org/project/pip/)
 * [Ngrok](https://ngrok.com/)
-* [Kiwari Access Token](https://qisme.qiscus.com/app/kiwari-prod)
+* Kiwari Access Token from `Chatbot Builder` ChatAja app
 
 ## How to run
 
@@ -18,9 +18,10 @@ $ cd webhook-kiwaribot-sample-python
 $ pip3 install -f requirement.txt
 ```
 
-* Login to [Kiwari User Dashboard](https://qisme.qiscus.com/app/kiwari-prod)
-* Create Access Token
-* Copy and Paste to `controller.py` class
+* Go to `Jelajah` menu
+* chat with `Chatbot Builder`
+* Create bot and get `access_token`
+* Copy and Paste to `controller.py`
 
 * Run webhook server
 
@@ -36,6 +37,6 @@ $ flask run
 $ ngrok http 5000
 ```
 
-* Register your webhook url by copy your ngrok https url from CLI at [Kiwari User Dashboard Profile](https://qisme.qiscus.com/app/kiwari-prod)
+* Register your webhook url by copy your ngrok https url from CLI, then input it to `Chatbot Builder`
 
 * Enjoy!
