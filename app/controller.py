@@ -7,7 +7,7 @@ from array import *
 class Controller:
     #set atribut yang dibutuhkan untuk controller
     access_token = "<input akses token disini>"
-    apiurl = "https://api.kiwari.chat/api/v1/chat/conversations/post_comment"
+    apiurl = "https://api.chataja.co.id/api/v1/chat/conversations/post_comment"
     apiResponse = "" #atribut untuk nampung response
     http = urllib3.PoolManager() #inisiasi atribut http request library urllib3
 
@@ -60,6 +60,7 @@ class Controller:
                     "type" : "link",
                     "payload" : {
                         "url" : "https://www.kiwari.chat",
+                        "method" : "get"
                     }
                 }
             ]
