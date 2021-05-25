@@ -1,4 +1,4 @@
-# Kiwari Bot Webhook Sample with Phyton
+# ChatAja! Bot Webhook Sample with Phyton
 
 ## Requirements
 
@@ -37,6 +37,6 @@ $ flask run
 $ ngrok http 5000
 ```
 
-* Register your webhook url by copy your ngrok https url from CLI, then input it to `Chatbot Builder`
+* Register your webhook url by copy your ngrok https url from CLI, then input it into `Chatbot Builder`
 
 * Enjoy!
